@@ -1,0 +1,40 @@
+.mainForm{
+    text-align: center;
+}
+.title{
+    text-align: center;
+    font-size: 30pt;
+    font-family: "Sitka Display", serif;
+    color: #696969;
+}
+.unique{
+    text-align: center;
+    font-size: 20px;
+    font-family: "Sitka Display", serif;
+    color: black;
+}
+.button{
+    margin-top:2%;
+    width: 10%;
+    border-radius: 10%;
+    background-color: white;
+    font-family: fantasy;
+    color: gray;
+    font-size: medium;
+    border-color: brown;
+}
+.input{
+    padding-top: 6px;
+    border-radius: 10%;
+    background-color: white;
+    font-family: "Sitka Display", serif;
+    color: gray;
+    font-size: medium;
+}
+.margin{
+   background: url("/src/assets/fon1.jpg") no-repeat;
+        background-size: 100%;
+        display: inline-block;
+        height: 5px;
+        width: 100%;
+}
