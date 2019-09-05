@@ -10,7 +10,7 @@ namespace ServerApi.Managers {
     public static class UserManager {
         public static ResultModel RegistrateUser(RegistrationModel model) {
             try {
-                using (var db = new TestEntities()) {
+                using (var db = new TestDbEntities()) {
                     var newUser = new UserProfile() {
                         CreateDate = DateTime.Now,
                         Budget = 1000
@@ -55,7 +55,7 @@ namespace ServerApi.Managers {
 
         public static ResultModel AuthorizeUser(string email, string password) {
             try {
-                using (var db = new TestEntities()) {
+                using (var db = new TestDbEntities()) {
                     if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password)) return new ResultModel("Data is wrong");
                     var user = db.UserProfile.FirstOrDefault(a => a.Email.ToLower() == email.ToLower());
                     if (user == null) return new ResultModel("User wasn't found");

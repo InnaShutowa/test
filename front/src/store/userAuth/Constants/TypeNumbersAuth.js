@@ -1,0 +1,2 @@
+export const SET_EMAIL_NUMBER_CONSTANT = 1;
+export const SET_PASSWORD_NUMBER_CONSTANT = 2;

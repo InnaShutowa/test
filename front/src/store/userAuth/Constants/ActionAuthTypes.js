@@ -1,0 +1,3 @@
+export const AUTH_USER_CONSTANT = "AUTH_USER";
+export const SET_EMAIL_CONSTANT = "SET_EMAIL";
+export const SET_PASSWORD_CONSTANT = "SET_PASSWORD";

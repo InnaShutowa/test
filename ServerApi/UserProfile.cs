@@ -21,9 +21,9 @@ namespace ServerApi
             this.Payments1 = new HashSet<Payments>();
         }
     
+        public int UserId { get; set; }
         public string FirstName { get; set; }
         public string SecondName { get; set; }
-        public int UserId { get; set; }
         public string Email { get; set; }
         public decimal Budget { get; set; }
         public System.DateTime CreateDate { get; set; }

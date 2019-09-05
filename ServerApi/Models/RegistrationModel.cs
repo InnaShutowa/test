@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 
 namespace ServerApi.Models {
     public class RegistrationModel {
-        [JsonProperty("first_namr")]
+        [JsonProperty("first_name")]
         public string FirstName { get; set; }
         [JsonProperty("second_name")]
         public string SecondName { get; set; }
