@@ -1,0 +1,1 @@
+export const GET_PAYMENT_INFO_CONST = "GET_PAYMENT_INFO";

@@ -1,0 +1,19 @@
+.table{
+    border: 1px solid grey;
+    width: 80%;
+}
+
+.cells{
+    border: 1px solid grey;
+}
+
+
+.title{
+    font-size: 30pt;
+    font-family: "Sitka Display", serif;
+    color: #696969;
+}
+
+.padding{
+    padding-left: 5%;
+}

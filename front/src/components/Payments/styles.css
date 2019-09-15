@@ -1,0 +1,29 @@
+.table{
+    border: 1px solid grey;
+    width: 80%;
+}
+
+.cells{
+    border: 1px solid grey;
+}
+
+.padding{
+    padding-left: 5%;
+    padding-top: 3%;
+    padding-bottom: 3%;
+}
+
+.title{
+    font-size: 30pt;
+    font-family: "Sitka Display", serif;
+    color: #696969;
+}
+
+
+.find{
+    display: inline-block;
+}
+
+.elements{
+    float: left;
+}
