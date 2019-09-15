@@ -1,11 +1,15 @@
 import axios from 'axios';
 import validateEmail from "../../helpers/validateEmail";
+
+import registrateUser from "../../helpers/registrateUser";
 import validatePassword from "../../helpers/validatePassword";
 import setUserRegistrationState from "../../helpers/setUserRegistrationState";
+import storage from 'redux-persist/lib/storage';
+import { resolve } from 'path';
 
 
 let initialState =  {
-    userRegistration:{
+        apikey: '',
         firstName: '',
         secondName: '',
         email: '',
@@ -13,8 +17,8 @@ let initialState =  {
         passwordSecond: '',
         emailValid: true,
         passwordValid: true,
-        polesValid: true
-    }
+        polesValid: true,
+        isReadyToRegistrate: false
 };
 
 function UserRegistrationReducer(state = initialState, action) {
@@ -25,184 +29,57 @@ function UserRegistrationReducer(state = initialState, action) {
 }
 
 const handlers  = {
+    "SET_APIKEY":{
+        handler(state, action){
+            state = {...initialState,  apikey: action.apikey};
+            return state;
+        }
+    },
+    "RESET_DATA":{
+        handler(state, action){
+            state = initialState;
+            return state;
+        }
+    },
     "SET_FIRST_NAME":{
         handler(state, action){
-            state = setUserRegistrationState(action.data,
-                initialState.userRegistration.secondName,
-                initialState.userRegistration.email,
-                initialState.userRegistration.passwordFirst,
-                initialState.userRegistration.passwordSecond,
-                true,
-                true,
-                true,
-                initialState.userAuth);
-            
-            initialState = state;
+            state = {...state, firstName: action.data, polesValid: true, passwordValid: true, emailValid: true};
             return state;
         }
     },
     "SET_SECOND_NAME":{
         handler(state, action){
-            state = setUserRegistrationState(initialState.userRegistration.firstName,
-                action.data,
-                initialState.userRegistration.email,
-                initialState.userRegistration.passwordFirst,
-                initialState.userRegistration.passwordSecond,
-                true,
-                true,
-                true,
-                initialState.userAuth);
-            
-            initialState = state;
+            state = {...state, secondName: action.data, polesValid: true, passwordValid: true, emailValid: true};
             return state;
         }
     },
     "SET_EMAIL_FOR_REG":{
         handler(state, action){
-            state = setUserRegistrationState(initialState.userRegistration.firstName,
-                initialState.userRegistration.secondName,
-                action.data,
-                initialState.userRegistration.passwordFirst,
-                initialState.userRegistration.passwordSecond,
-                true,
-                true,
-                true,
-                initialState.userAuth);
-            
-            initialState = state;
+            state = {...state, email: action.data, polesValid: true, passwordValid: true, emailValid: true};
             return state;
         }
     },
     "SET_PASSWORD_FIRST":{
         handler(state, action){
-            state = setUserRegistrationState(initialState.userRegistration.firstName,
-                initialState.userRegistration.secondName,
-                initialState.userRegistration.email,
-                action.data,
-                initialState.userRegistration.passwordSecond,
-                true,
-                true,
-                true,
-                initialState.userAuth);
-            
-            initialState = state;
+            state = {...state, passwordFirst: action.data, polesValid: true, passwordValid: true, emailValid: true};
             return state;
         }
     },
     "SET_PASSWORD_SECOND":{
         handler(state, action){
-            state = setUserRegistrationState(initialState.userRegistration.firstName,
-                initialState.userRegistration.secondName,
-                initialState.userRegistration.email,
-                initialState.userRegistration.passwordFirst,
-                action.data,
-                true,
-                true,
-                true,
-                initialState.userAuth);
-            
-            initialState = state;
+            state = {...state, passwordSecond: action.data, polesValid: true, passwordValid: true, emailValid: true};
             return state;
         }
     }, 
-    "REGISTRATION_USER":{
+    "SET_RESULTS_VALIDATION":{
         handler(state, action){
-            if (state.userRegistration.firstName == undefined ||
-                state.userRegistration.secondName == undefined ||
-                state.userRegistration.email == undefined ||
-                state.userRegistration.passwordFirst == undefined ||
-                state.userRegistration.passwordSecond == undefined ||
-                state.userRegistration.firstName == "" ||
-                state.userRegistration.secondName == "" ||
-                state.userRegistration.email == "" ||
-                state.userRegistration.passwordFirst == "" ||
-                state.userRegistration.passwordSecond == ""){
-                    alert("Необходимо заполнить поля!");
-
-                    state = setUserRegistrationState('',
-                        '', '', '', '',
-                        false, false, false,
-                        initialState.userAuth);
-                    
-                    initialState = state;
-                    return state;
-                }
-
-                if (state.userRegistration.passwordFirst !== state.userRegistration.passwordSecond){
-                    alert("Пароли не совпадают!");
-    
-                    state = setUserRegistrationState(initialState.userRegistration.firstName,
-                        initialState.userRegistration.secondName,
-                        initialState.userRegistration.email,
-                        '',
-                        '',
-                        true,
-                        false,
-                        true,
-                        initialState.userAuth);
-                    
-                    initialState = state;
-                    return state;
-                }
-
-
-                if (!validateEmail(state.userRegistration.email)){
-                    alert("Email введен некорректно!");
-    
-                    state = setUserRegistrationState(initialState.userRegistration.firstName,
-                        initialState.userRegistration.secondName,
-                        '',
-                        initialState.userRegistration.passwordFirst,
-                        initialState.userRegistration.passwordSecond,
-                        false,
-                        true,
-                        true,
-                        initialState.userAuth);
-                    
-                    initialState = state;
-                    return state;
-                }
-                if (!validatePassword(state.userRegistration.passwordFirst)){
-                    alert("Пароль должен быть минимум 8 символов!");
-    
-                    state = setUserRegistrationState(initialState.userRegistration.firstName,
-                        initialState.userRegistration.secondName,
-                        initialState.userRegistration.email,
-                        '',
-                        '',
-                        true,
-                        false,
-                        true,
-                        initialState.userAuth);
-                    
-                    initialState = state;
-                    return state;
-                }
-
-            var body = {
-                first_name: state.userRegistration.firstName,
-                second_name: state.userRegistration.secondName,
-                email: state.userRegistration.email,
-                password: state.userRegistration.passwordFirst
-            }
-            
-            axios({
-                method: 'post',
-                headers: {"Access-Control-Allow-Origin": "http://localhost:9000"},
-                url: 'http://localhost:57785/Registration',
-                data: body
-            })
-            .then(function (response) {
-                console.log(response);
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-
+            state = {...state, passwordValid: action.passwordValid, emailValid: action.emailValid, polesValid: action.polesValid};
             return state;
         }
     }
-}
+        
+    }
+
 
 export default UserRegistrationReducer;
 

@@ -6,11 +6,9 @@ function setUserRegistrationState(firstName,
     emailValid,
     passwordValid,
     polesValid,
-    userAuth,){
+    apikey){
 
     let state = {
-        userAuth: userAuth,
-        userRegistration: {
             firstName: firstName,
             secondName: secondName,
             email: email,
@@ -18,8 +16,9 @@ function setUserRegistrationState(firstName,
             passwordSecond: passSecond,
             emailValid: emailValid,
             passwordValid: passwordValid,
-            polesValid: polesValid
-        }
+            polesValid: polesValid,
+            apikey: apikey
+        
     };
     return state;
 }

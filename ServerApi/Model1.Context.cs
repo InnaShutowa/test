@@ -28,5 +28,6 @@ namespace ServerApi
         public virtual DbSet<AuthInfo> AuthInfo { get; set; }
         public virtual DbSet<Payments> Payments { get; set; }
         public virtual DbSet<UserProfile> UserProfile { get; set; }
+        public virtual DbSet<Apikeys> Apikeys { get; set; }
     }
 }

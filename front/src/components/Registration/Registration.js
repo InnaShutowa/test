@@ -2,19 +2,26 @@ import React, {Component} from "react";
 import {connect} from "react-redux";
 import styles from "./styles.css"
 import Button from '@material-ui/core/Button';
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { MuiThemeProvider} from '@material-ui/core/styles';
+import axios from 'axios';
 
-
-import AuthUserAction from "../../store/userAuth/Actions/AuthUserAction";
 import RegistrationAction from "../../store/userRegistration/Actions/RegistrationAction";
 import SetPoleRegAction from "../../store/userRegistration/Actions/SetPoleRegAction";
+
+import SetApikeyAction from "../../store/userRegistration/Actions/SetApikeyAction";
 import * as types from "../../store/userRegistration/Constants/TypeNumbersReg";
 import newTheme from "../../helpers/newTheme";
+import validateRegistration from "../../helpers/validateRegistration";
+import SetResultsValidationAction from "../../store/userRegistration/Actions/SetResultsValidationAction";
+import ResetDataAction from "../../store/userRegistration/Actions/ResetDataAction";
+import SetUserDataAction from "../../store/user/Actions/SetUserDataAction";
 
 const mapStateToProps = function (state) {
-    console.log(state.UserRegistrationReducer);
     return {
-        state: state.UserRegistrationReducer.userRegistration
+        state: {
+            userRegistration: state.UserRegistrationReducer,
+            user: state.UserReducer
+        }
     };
 };
 
@@ -25,15 +32,81 @@ const mapDispatchToProps = (dispatch) => {
         },
         setPoleAction: (data, type)=>{
             dispatch(SetPoleRegAction(data, type));
+        },
+        setApikey: (apikey)=>{
+            dispatch(SetApikeyAction(apikey));
+        },
+        setResultsValidation: (email, password, poles)=>{
+            dispatch(SetResultsValidationAction(email, password, poles));
+        },
+        resetData: ()=>{
+            dispatch(ResetDataAction());
+        },
+        setUserData: (data) =>{
+            dispatch(SetUserDataAction(data));
         }
     }
 };
 
 
+
 class Registration extends Component {
-    handleChange (event) {
-        this.props.regUserAction();
-        event.preventDefault();
+    
+    
+    handlerChange (event) {   
+
+        let obj = validateRegistration(this.props.state.userRegistration);
+        if (obj.polesValid && obj.passwordValid && obj.emailValid){
+            var body = {
+                first_name: this.props.state.userRegistration.firstName,
+                second_name: this.props.state.userRegistration.secondName,
+                email: this.props.state.userRegistration.email,
+                password: this.props.state.userRegistration.passwordFirst
+            }
+            axios({
+                method: 'post',
+                headers: {"Access-Control-Allow-Origin": "http://localhost:9000"},
+                url: 'http://localhost:57785/Registration',
+                data: body
+            }).then(response=>{
+                if (response.data.status){
+                    this.props.setApikey(response.data.apikey);
+
+                    axios({
+                        method: 'get',
+                        headers: {"Access-Control-Allow-Origin": "http://localhost:9000"},
+                        url: 'http://localhost:57785/User?apikey='+response.data.apikey
+                    }).then(response=>{
+                        console.log(response);
+
+                        if (response.data.status){
+                            this.props.setUserData(response.data.data);
+                            window.location.pathname = "/payments";
+                        } else{
+                            this.props.resetData();
+                            alert("Непредвиденная ошибка!");
+                        }
+                    }).catch(error=>{
+                        this.props.resetData();
+                        alert("Непредвиденная ошибка!");
+                    });
+
+
+                    //window.location.pathname = "/payments";
+                } else{
+                    this.props.resetData();
+                    alert("Непредвиденная ошибка!");
+                }
+            }).catch(error=>{
+                this.props.resetData();
+                alert("Непредвиденная ошибка!");
+            });
+
+        
+        } else{
+            this.props.setResultsValidation(obj.emailValid, obj.passwordValid, obj.polesValid);
+        }
+        event.preventDefault();        
     }
     
     handlerFirstNameChange (firstName){
@@ -57,20 +130,22 @@ class Registration extends Component {
     }
 
     render() {
-        let colorEmail = this.props.state.emailValid ? "gray" : "red";
-        let colorPassword = this.props.state.passwordValid ? "gray" : "red";
-        let colorPoles = this.props.state.polesValid ? "gray" : "red";
+        
+console.log(this.props.state);
 
+        
+        let colorEmail = this.props.state.userRegistration.emailValid ? "gray" : "red";
+        let colorPassword = this.props.state.userRegistration.passwordValid ? "gray" : "red";
+        let colorPoles = this.props.state.userRegistration.polesValid ? "gray" : "red";
 
         return <div className={styles.mainForm}>
             <div className={styles.title}>Регистрация</div>
-            <div className={styles.margin}></div>
             <form onSubmit={a=>this.handleChange(a)}>
 
                 <input className={styles.input} 
                         type="text" 
                         placeholder="Имя" 
-                        value = {this.props.state.firstName}
+                        value = {this.props.state.userRegistration.firstName}
                         style = {{borderColor: colorPoles}}
                         onChange={a=>this.handlerFirstNameChange(a)}/> <br/>
 
@@ -78,32 +153,32 @@ class Registration extends Component {
                         type = "text" 
                         placeholder = "Фамилия" 
                         style = {{borderColor: colorPoles}}
-                        value = {this.props.state.secondName}
+                        value = {this.props.state.userRegistration.secondName}
                         onChange = {a=>this.handlerSecondNameChange(a)}/> <br/>
                     
                 <input className={styles.input} 
                         type="text" 
                         placeholder="Еmail" 
-                        value = {this.props.state.email}
+                        value = {this.props.state.userRegistration.email}
                         style = {{borderColor: colorEmail}}
                         onChange={a=>this.handlerEmailChange(a)}/> <br/><br/>
 
                 <input className = {styles.input} 
                         type = "password" 
                         placeholder = "Введите пароль" 
-                        value = {this.props.state.passwordFirst}
+                        value = {this.props.state.userRegistration.passwordFirst}
                         style = {{borderColor: colorPassword}}
                         onChange = {a=>this.handlerPasswordFirstChange(a)}/><br/>
 
                 <input className = {styles.input} 
                         type = "password" 
                         placeholder = "Повторите пароль" 
-                        value = {this.props.state.passwordSecond}
+                        value = {this.props.state.userRegistration.passwordSecond}
                         style = {{borderColor: colorPassword}}
                         onChange = {a=>this.handlerPasswordSecondChange(a)}/><br/> <br/>
 
                 <MuiThemeProvider theme={newTheme}>
-                    <Button color="primary">Зарегистрироваться</Button>
+                    <Button onClick={a=>this.handlerChange(a)} color="primary">Зарегистрироваться</Button>
                 </MuiThemeProvider>
             </form>
         </div>;

@@ -11,6 +11,8 @@
         <AssociationConnector Association="TestDbModel.FK__AuthInfo__UserId__25869641" ManuallyRouted="false" />
         <AssociationConnector Association="TestDbModel.FK__Payments__UserFo__29572725" ManuallyRouted="false" />
         <AssociationConnector Association="TestDbModel.FK__Payments__UserId__286302EC" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="TestDbModel.Apikeys" Width="1.5" PointX="3" PointY="8" />
+        <AssociationConnector Association="TestDbModel.FK__Apikeys__UserId__36B12243" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

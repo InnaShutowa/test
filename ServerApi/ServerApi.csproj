@@ -169,6 +169,9 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Apikeys.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
@@ -176,9 +179,13 @@
     <Compile Include="AuthInfo.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Controllers\FindController.cs" />
     <Compile Include="Controllers\AuthController.cs" />
+    <Compile Include="Controllers\PaymentInfoController.cs" />
     <Compile Include="Controllers\PaymentsController.cs" />
     <Compile Include="Controllers\RegistrationController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Enums\FindTypesEnum.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -200,6 +207,9 @@
       <DependentUpon>Model1.edmx</DependentUpon>
     </Compile>
     <Compile Include="Models\AuthModel.cs" />
+    <Compile Include="Models\CreatePaymentModel.cs" />
+    <Compile Include="Models\FindPaymentModel.cs" />
+    <Compile Include="Models\PaymentModel.cs" />
     <Compile Include="Models\RegistrationModel.cs" />
     <Compile Include="Models\ResultModel.cs" />
     <Compile Include="Payments.cs">

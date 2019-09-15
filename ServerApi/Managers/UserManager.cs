@@ -8,6 +8,38 @@ using ServerApi.Models;
 
 namespace ServerApi.Managers {
     public static class UserManager {
+        /// <summary>
+        /// получаем всю инфу по пользователю
+        /// </summary>
+        public static ResultModel GetUserInfo(string apikey) {
+            try {
+                using (var db = new TestDbEntities()) {
+                    //var apikeys = db.Apikeys.ToList();
+                    //db.Apikeys.RemoveRange(apikeys);
+                    //db.SaveChanges();
+                    //var auths = db.AuthInfo.ToList();
+                    //db.AuthInfo.RemoveRange(auths);
+                    //db.SaveChanges();
+                    //var users = db.UserProfile.ToList();
+                    //db.UserProfile.RemoveRange(users);
+                    //db.SaveChanges();
+
+
+                    var ap = db.Apikeys.FirstOrDefault(a => a.Apikey == apikey);
+                    var user = ap?.UserProfile;
+                    if (user == null) return new ResultModel("Apikey is wrong");
+
+                    var result = new AuthUserInfoModel(db, user);
+                    return new ResultModel(result);
+
+                }
+            } catch (Exception ex) {
+                return new ResultModel(ex.Message);
+            }
+        }
+        /// <summary>
+        /// регистрируем пользователя
+        /// </summary>
         public static ResultModel RegistrateUser(RegistrationModel model) {
             try {
                 using (var db = new TestDbEntities()) {
@@ -17,9 +49,9 @@ namespace ServerApi.Managers {
                     };
 
                     if (!CheckEmail(model.Email)) return new ResultModel("Email is incorrect");
-                    if (db.UserProfile.Any(a=>a.Email == model.Email)) return new ResultModel("Email is busy");
+                    if (db.UserProfile.Any(a => a.Email == model.Email)) return new ResultModel("Email is busy");
 
-                    if (string.IsNullOrEmpty(model.FirstName) 
+                    if (string.IsNullOrEmpty(model.FirstName)
                         || string.IsNullOrEmpty(model.SecondName)
                         || string.IsNullOrEmpty(model.Password)
                         || model.Password.Length < 8)
@@ -28,14 +60,14 @@ namespace ServerApi.Managers {
                     newUser.Email = model.Email;
                     newUser.FirstName = model.FirstName;
                     newUser.SecondName = model.SecondName;
-                    
-                    var accountNumber = Membership.GeneratePassword(15, 0);
+
+                    var accountNumber = GenerateAccountNumber();
                     while (db.UserProfile.Any(a => a.AccountNumber.Equals(accountNumber))) {
-                        accountNumber = Membership.GeneratePassword(15, 0);
+                        accountNumber = GenerateAccountNumber();
                     }
 
                     newUser.AccountNumber = accountNumber;
-                    
+
                     db.UserProfile.Add(newUser);
                     db.SaveChanges();
 
@@ -45,10 +77,17 @@ namespace ServerApi.Managers {
                     };
 
                     db.SaveChanges();
-                    return new ResultModel(true);
+
+                    var apikey = new Apikeys() {
+                        UserId = newUser.UserId,
+                        Apikey = Membership.GeneratePassword(15, 0)
+                    };
+                    db.Apikeys.Add(apikey);
+                    db.SaveChanges();
+
+                    return new ResultModel(true, apikey.Apikey);
                 }
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 return new ResultModel(ex.Message);
             }
         }
@@ -61,10 +100,10 @@ namespace ServerApi.Managers {
                     if (user == null) return new ResultModel("User wasn't found");
                     var hash = GetHash(password);
                     if (user.AuthInfo.PasswordMd5 != hash) return new ResultModel("Password is wrong");
-                    return new ResultModel(true);
+
+                    return new ResultModel(true, user?.Apikeys?.Apikey ?? "");
                 }
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 return new ResultModel(ex.Message);
             }
         }
@@ -75,14 +114,13 @@ namespace ServerApi.Managers {
         private static bool CheckEmail(string email) {
             try {
                 if (string.IsNullOrEmpty(email) || email.IndexOf('@') == -1 || email.Length < 6) return false;
-                
+
                 var cutEmail = email.Remove(0, email.IndexOf('@'));
 
                 if (cutEmail.Length == 0 || cutEmail.Length <= 3 || cutEmail.IndexOf('.') == -1) return false;
 
                 return true;
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 return false;
             }
         }
@@ -97,8 +135,26 @@ namespace ServerApi.Managers {
                     var hashString = Encoding.Default.GetString(hash);
                     return hashString;
                 }
+            } catch (Exception ex) {
+                return "";
             }
-            catch (Exception ex) {
+        }
+
+        /// <summary>
+        /// формируем счет
+        /// </summary>
+        private static string GenerateAccountNumber() {
+            try {
+                var number = "";
+                var rand = new Random();
+                var buf = 0;
+                while (buf < 15) {
+                    number += rand.Next(0, 9);
+                    buf++;
+                }
+                return number;
+
+            } catch (Exception ex) {
                 return "";
             }
         }

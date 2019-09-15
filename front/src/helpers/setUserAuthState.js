@@ -2,16 +2,16 @@ function setUserAuthState(email,
     pass, 
     emailValid,
     passValid, 
-    userReg){
+    apikey){
 
     let state = {
         userAuth:{
             email: email,
             password: pass,
             emailValid: emailValid,
-            passwordValid: passValid
-        },
-        userRegistration:userReg
+            passwordValid: passValid,
+            apikey: apikey
+        }
     };
     return state;
 }

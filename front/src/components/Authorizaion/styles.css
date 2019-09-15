@@ -21,10 +21,3 @@
     color: gray;
     font-size: medium;
 }
-.margin{
-   background: url("/src/assets/fon1.jpg") no-repeat;
-        background-size: 100%;
-        display: inline-block;
-        height: 5px;
-        width: 100%;
-}

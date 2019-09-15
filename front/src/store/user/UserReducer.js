@@ -1,17 +1,17 @@
-import {AUTH_USER_CONSTANT} from "./constants/ActionTypes";
 import axios from 'axios';
 import validateEmail from "../../helpers/validateEmail";
 import validatePassword from "../../helpers/validatePassword";
 
 
 let initialState =  {
-    user:{
-        email: '',
-        firstName: '',
-        secondName: '',
-        isAuth: true,
-        budget: 1000
-    }
+    email: '',
+    firstName: '',
+    secondName: '',
+    isAuth: false,
+    budget: 1000,
+    apikey: "",
+    accountNumber: "",
+    userId: 1
 };
 
 function UserReducer(state = initialState, action) {
@@ -23,7 +23,23 @@ function UserReducer(state = initialState, action) {
 
 const handlers  = {
    
-    }
+   "SET_USER_DATA":{
+        handler(state, action){
+            state = {...state,
+                email:action.email,
+                isAuth: true,
+                firstName:action.firstName,
+                secondName:action.secondName,
+                budget:action.budget,
+                apikey:action.apikey,
+                accountNumber: action.accountNumber,
+                userId: action.userId
+                };
+
+            return state;
+        }
+   }
+}
 
 
 export default UserReducer;

@@ -6,12 +6,11 @@ import setUserAuthState from "../../helpers/setUserAuthState";
 
 
 let initialState =  {
-    userAuth:{
         email: '',
         password: '',
         emailValid: true,
-        passwordValid: true
-    }
+        passwordValid: true,
+        apikey: ''
 };
 
 function UserAuthReducer(state = initialState, action) {
@@ -22,92 +21,28 @@ function UserAuthReducer(state = initialState, action) {
 }
 
 const handlers  = {
-    "AUTH_USER" : {
+    "SET_RESULTS_VALIDATION_AUTH":{
         handler(state, action){
-            if (state.userAuth.email == undefined 
-                || state.userAuth.password == undefined
-                || state.userAuth.password == "" 
-                || state.userAuth.email == ""){
-                alert("Необходимо заполнить поля!");
-
-                state = setUserAuthState('',
-                    '',
-                    false,
-                    false,
-                    initialState.userRegistration);
-                initialState = state;
-
-                return state;
-            }
-            
-            if (!validateEmail(state.userAuth.email)){
-                alert("Email введен некорректно!");
-
-                state = setUserAuthState('',
-                    initialState.userAuth.password,
-                    false,
-                    true,
-                    initialState.userRegistration);
-                
-                initialState = state;
-                return state;
-                
-            }
-            if (!validatePassword(state.userAuth.password)){
-                alert("Пароль должен быть минимум 8 символов!");
-
-                state = setUserAuthState(initialState.userAuth.email,
-                    '',
-                    true,
-                    false,
-                    initialState.userRegistration);
-
-                initialState = state;
-                return state;
-            }
-            var body = {
-                email: state.userAuth.email,
-                password: state.userAuth.password
-            }
-            
-            axios({
-                method: 'post',
-                headers: {"Access-Control-Allow-Origin": "http://localhost:9000"},
-                url: 'http://localhost:57785/Auth',
-                data: body
-            })
-            .then(function (response) {
-                console.log(response);
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-
+            state = {...state, passwordValid: action.passwordValid, emailValid: action.emailValid, polesValid: action.polesValid};
             return state;
         }
     },
     "SET_EMAIL" : {
         handler(state, action){
-            state = setUserAuthState(action.data,
-                initialState.userAuth.password,
-                true,
-                true,
-                initialState.userRegistration);
-            initialState = state;
-            
+            state = {...state, email: action.data, emailValid: true, passwordValid: true};
             return state;
         }
     },
     "SET_PASSWORD":{
         handler(state, action){
-            state = setUserAuthState(initialState.userAuth.email,
-                action.data,
-                true,
-                true,
-                initialState.userRegistration);
-            
-            initialState = state;
-            console.log(state);
+            state = {...state, passwordValid:true, emailValid: true, password: action.data};
+            return state;
+        }
+    },
+    "SET_APIKEY":{
+        handler(state, action){
+            console.log("plf");
+            state = {...initialState, apikey: action.apikey};
             return state;
         }
     }

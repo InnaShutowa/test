@@ -19,7 +19,7 @@ class Header extends Component {
             </div>
             
             <div className={style.links}>
-                <div className={style.link}><Link to={"/main"}>На главную</Link></div>
+                <div className={style.link}><Link to={"/"}>На главную</Link></div>
                 <div className={style.link}>
                     <a className={style.internalLink} href={"/authorize"}>Войти</a> <br/>
                     <div className={style.internalLink}><Link to={"/registration"}>Регистрация</Link></div>

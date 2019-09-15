@@ -3,11 +3,16 @@ import {connect} from "react-redux";
 import styles from "./styles.css"
 import Button from '@material-ui/core/Button';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import axios from 'axios';
 
-import AuthUserAction from "../../store/userAuth/Actions/AuthUserAction";
+import SetApikeyAction from "../../store/userAuth/Actions/SetApikeyAction";
 import SetPoleAuthAction from "../../store/userAuth/Actions/SetPoleAuthAction";
+import SetResultsValidationAuthAction from "../../store/userAuth/Actions/SetResultsValidationAuthAction";
 import * as types from "../../store/userAuth/Constants/TypeNumbersAuth";
 import newTheme from "../../helpers/newTheme";
+import validateAuth from "../../helpers/validateAuth";
+import ResetDataAction from "../../store/userAuth/Actions/ResetDataAction";
+import SetUserDataAction from "../../store/user/Actions/SetUserDataAction";
 
 
   
@@ -15,25 +20,86 @@ import newTheme from "../../helpers/newTheme";
 const mapStateToProps = function (state) {
     console.log(state);
     return {
-        state: state.UserAuthReducer.userAuth
+        state: {
+            userAuth: state.UserAuthReducer,
+            user: state.UserReducer
+        }
     };
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        authUserAction: (email, password) => {
-            dispatch(AuthUserAction(email, password));
+        setApikey: (apikey) => {
+            console.log("???");
+            dispatch(SetApikeyAction(apikey));
         },
         setPoleAction: (data, type)=>{
             dispatch(SetPoleAuthAction(data, type));
+        },
+        resetData: ()=>{
+            dispatch(ResetDataAction());
+        },
+        setResultsValidationAuth:(email, password)=>{
+            dispatch(SetResultsValidationAuthAction(email, password));
+        },
+        setUserData: (data) =>{
+            dispatch(SetUserDataAction(data));
         }
     }
 };
 
 
 class Authorization extends Component {
-    handleChange (event) {
-        this.props.authUserAction();
+
+    handlerChange (event) {
+        let obj = validateAuth(this.props.state.userAuth);
+        if (obj.emailValid && obj.passwordValid){
+            var body = {
+                email: this.props.state.userAuth.email,
+                password: this.props.state.userAuth.password
+            }
+            
+            axios({
+                method: 'post',
+                headers: {"Access-Control-Allow-Origin": "http://localhost:9000"},
+                url: 'http://localhost:57785/Auth',
+                data: body
+            })
+            .then(response=>{
+                console.log(response);
+                if (response.data.status){
+                    this.props.setApikey(response.data.apikey);
+
+
+                        axios({
+                            method: 'get',
+                            headers: {"Access-Control-Allow-Origin": "http://localhost:9000"},
+                            url: 'http://localhost:57785/User?apikey='+response.data.apikey
+                        }).then(response=>{
+                            console.log(response);
+
+                            if (response.data.status){
+                                this.props.setUserData(response.data.data);
+                                window.location.pathname = "/payments";
+                            } else{
+                                this.props.resetData();
+                                alert("Непредвиденная ошибка!");
+                            }
+                        }).catch(error=>{
+                            this.props.resetData();
+                            alert("Непредвиденная ошибка!");
+                        });
+
+                    
+                } else{
+                    this.props.resetData();
+                    alert("Непредвиденная ошибка!");
+                }
+            });
+
+        } else{
+           this.props.setResultsValidationAuth(obj.emailValid, obj.passwordValid);
+        }
         event.preventDefault();
     }
     
@@ -46,30 +112,31 @@ class Authorization extends Component {
     }
 
     render() {
-        let colorEmail = this.props.state.emailValid ? "gray" : "red";
-        let colorPassword = this.props.state.passwordValid ? "gray" : "red";
+
+
+        let colorEmail = this.props.state.userAuth.emailValid ? "gray" : "red";
+        let colorPassword = this.props.state.userAuth.passwordValid ? "gray" : "red";
 
         return <div className={styles.mainForm}>
             <div className={styles.title}>Авторизация</div>
-            <div className={styles.margin}></div>
             <form onSubmit={a=>this.handleChange(a)}>
                 
                 <input className={styles.input} 
                     type="text" 
                     placeholder="Введите email" 
-                    value = {this.props.state.email}
+                    value = {this.props.state.userAuth.email}
                     style = {{borderColor: colorEmail}}
                     onChange={a=>this.handlerEmailChange(a)}/> <br/>
 
                 <input className={styles.input} 
                     type="password" 
                     placeholder="Введите пароль" 
-                    value = {this.props.state.password}
+                    value = {this.props.state.userAuth.password}
                     style = {{borderColor: colorPassword}}
                     onChange={a=>this.handlePasswordChange(a)}/><br/><br/>
                 
                 <MuiThemeProvider theme={newTheme}>
-                    <Button color="primary">Войти</Button>
+                    <Button  onClick={a=>this.handlerChange(a)} color="primary">Войти</Button>
                 </MuiThemeProvider>
             </form>
         </div>;
