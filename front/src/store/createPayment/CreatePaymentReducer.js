@@ -29,10 +29,8 @@ const handlers  = {
                 params: {'apikey': action.apikey}
             })
             .then(function (response) {
-                console.log(response);
             })
             .catch(function (error) {
-                console.log(error);
             });
             return state;
         }
@@ -83,7 +81,6 @@ const handlers  = {
                 polesValid: action.polesValid, 
                 accountForNumberValid: action.accountForNumberValid, 
                 sumValid: action.sumValid};
-                console.log(state);
             return state;
         }
     },
