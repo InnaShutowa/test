@@ -3,13 +3,6 @@ import {Link} from "react-router-dom";
 
 import style from "./styles.css";
 
-const mapStateToProps = function (state) {
-    console.log(state);
-    return {
-        state: state.UserReducer.user
-    };
-};
-
 
 class Header extends Component {
     render() {

@@ -1,13 +1,3 @@
-import axios from 'axios';
-import validateEmail from "../../helpers/validateEmail";
-
-import registrateUser from "../../helpers/registrateUser";
-import validatePassword from "../../helpers/validatePassword";
-import setUserRegistrationState from "../../helpers/setUserRegistrationState";
-import storage from 'redux-persist/lib/storage';
-import { resolve } from 'path';
-
-
 let initialState =  {
         apikey: '',
         firstName: '',
@@ -76,9 +66,8 @@ const handlers  = {
             state = {...state, passwordValid: action.passwordValid, emailValid: action.emailValid, polesValid: action.polesValid};
             return state;
         }
-    }
-        
-    }
+    }        
+}
 
 
 export default UserRegistrationReducer;

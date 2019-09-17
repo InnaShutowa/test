@@ -12,8 +12,6 @@ let apikey = {};
         apikey = result;
     });
     
-    console.log("eeeee");
-    console.log(apikey);
     return apikey;
 }
 
@@ -25,7 +23,6 @@ function Help(body){
         url: 'http://localhost:57785/Registration',
         data: body
     }).then(response=>{
-        console.log(response);
         return response;
     });
 }

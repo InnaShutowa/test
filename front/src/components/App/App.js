@@ -16,7 +16,6 @@ import Authorization from "../Authorizaion";
 import Registration from "../Registration";
 import Payments from "../Payments";
 import CreatePayment from "../CreatePayment";
-import isNullOrUndefined from "../../helpers/isNullOrEmpty";
 import Payment from "../Payment/Payment";
 import Home from "../Home/Home";
 
@@ -53,7 +52,6 @@ if (decoded!=undefined && decoded.isAuth != undefined && decoded.isAuth=="true")
     createPayment = <Route exact path={"/create"} component={CreatePayment}/>;
     payment = <Route exact path={"/payment"} component={Payment}/>;
     home = <Route exact path={"/home"} component={Home}/>;
-
 }
 
 class App extends Component{

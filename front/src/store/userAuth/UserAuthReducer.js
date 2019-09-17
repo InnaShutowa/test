@@ -1,10 +1,3 @@
-import {AUTH_USER_CONSTANT} from "./Constants/ActionAuthTypes";
-import axios from 'axios';
-import validateEmail from "../../helpers/validateEmail";
-import validatePassword from "../../helpers/validatePassword";
-import setUserAuthState from "../../helpers/setUserAuthState";
-
-
 let initialState =  {
         email: '',
         password: '',
@@ -41,7 +34,6 @@ const handlers  = {
     },
     "SET_APIKEY":{
         handler(state, action){
-            console.log("plf");
             state = {...initialState, apikey: action.apikey};
             return state;
         }

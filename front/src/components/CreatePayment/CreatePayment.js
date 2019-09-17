@@ -16,7 +16,6 @@ import validatePaymentCreate from "../../helpers/validatePaymentCreate";
 
 
 const mapStateToProps = function (state) {
-    console.log(state.PaymentsReducer);
     return {
         state: {
             createPayment:state.CreatePaymentReducer,
@@ -47,7 +46,6 @@ class CreatePayment extends Component {
 
     handlerMakePaymentChange(event){
         let obj = validatePaymentCreate(this.props.state.createPayment, this.props.state.user.budget);
-        console.log(obj);
         if (obj.sumValid && obj.polesValid && obj.accountForNumberValid){
             let body = {
                 apikey:this.props.state.user.apikey,
@@ -65,26 +63,22 @@ class CreatePayment extends Component {
                 data: body
             })
             .then(response=>{
-                console.log(response);
                 if (response.data.status){
                         axios({
                             method: 'get',
                             headers: {"Access-Control-Allow-Origin": "http://localhost:9000"},
                             url: 'http://localhost:57785/User?apikey='+this.props.state.user.apikey
                         }).then(response2=>{
-                            console.log(response2);
     
                             if (response2.data.status){
                                 this.props.setUserData(response2.data.data);
                                 window.location.pathname = "/payments";
                             } else{
-                                console.log("жопа здесь");
                                 this.props.resetData();
                                 alert("Непредвиденная ошибка!");
                             }
                         })
                 } else{
-                    console.log("что-то не так");
                     this.props.resetData();
                     alert("Непредвиденная ошибка!");
                 }

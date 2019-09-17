@@ -9,7 +9,6 @@ import GetPaymentInfoAction from "../../store/payment/Actions/GetPaymentInfoActi
 
 
 const mapStateToProps = function (state) {
-    console.log(state);
     return {
         state: {
             payment: state.PaymentReducer,
@@ -36,8 +35,6 @@ class Payment extends Component {
             headers: {"Access-Control-Allow-Origin": "http://localhost:9000"},
             url: 'http://localhost:57785/PaymentInfo?apikey=' + this.props.state.user.apikey + '&paymentId='+params.id
         }).then(response=>{
-            console.log(response);
-
             if (response.data.status){
                 this.props.getPaymentInfo(response.data.data);
             } else{

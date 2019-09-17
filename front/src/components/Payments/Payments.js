@@ -13,7 +13,6 @@ import ChangeSelectedValueAction from "../../store/payments/Actions/ChangeSelect
 import SetFindValueAction from "../../store/payments/Actions/SetFindValueAction";
 
 const mapStateToProps = function (state) {
-    console.log(state.PaymentsReducer);
     return {
         state: {
             payments: state.PaymentsReducer,
@@ -64,8 +63,6 @@ class Payments extends Component {
         }).then(response=>{
             if (response.data.status){
                 response.data.data.map((element, i)=>{
-                    console.log(this.props.state.payments);
-                    console.log(element.output);;
                     if (this.props.state.payments.isOnlyInput == this.props.state.payments.isOnlyOutput){
                         this.props.addPaymentInfo(element);
                     } else if (this.props.state.payments.isOnlyInput && !element.output){
@@ -119,8 +116,6 @@ class Payments extends Component {
         }).then(response=>{
             if (response.data.status){
                 response.data.data.map((element, i)=>{
-                    console.log(this.props.state.payments);
-                    console.log(element.output);;
                     if (this.props.state.payments.isOnlyInput == this.props.state.payments.isOnlyOutput){
                         this.props.addPaymentInfo(element);
                     } else if (this.props.state.payments.isOnlyInput && !element.output){

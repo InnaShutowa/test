@@ -18,7 +18,6 @@ import SetUserDataAction from "../../store/user/Actions/SetUserDataAction";
   
 
 const mapStateToProps = function (state) {
-    console.log(state);
     return {
         state: {
             userAuth: state.UserAuthReducer,
@@ -30,7 +29,6 @@ const mapStateToProps = function (state) {
 const mapDispatchToProps = (dispatch) => {
     return {
         setApikey: (apikey) => {
-            console.log("???");
             dispatch(SetApikeyAction(apikey));
         },
         setPoleAction: (data, type)=>{
@@ -66,7 +64,6 @@ class Authorization extends Component {
                 data: body
             })
             .then(response=>{
-                console.log(response);
                 if (response.data.status){
                     this.props.setApikey(response.data.apikey);
 
@@ -76,8 +73,6 @@ class Authorization extends Component {
                             headers: {"Access-Control-Allow-Origin": "http://localhost:9000"},
                             url: 'http://localhost:57785/User?apikey='+response.data.apikey
                         }).then(response=>{
-                            console.log(response);
-
                             if (response.data.status){
                                 this.props.setUserData(response.data.data);
                                 window.location.pathname = "/payments";
@@ -97,7 +92,7 @@ class Authorization extends Component {
                 }
             });
 
-        } else{
+          } else{
            this.props.setResultsValidationAuth(obj.emailValid, obj.passwordValid);
         }
         event.preventDefault();
@@ -132,7 +127,7 @@ class Authorization extends Component {
                     type="password" 
                     placeholder="Введите пароль" 
                     value = {this.props.state.userAuth.password}
-                    style = {{borderColor: colorPassword}}
+                                style = {{borderColor: colorPassword}}
                     onChange={a=>this.handlePasswordChange(a)}/><br/><br/>
                 
                 <MuiThemeProvider theme={newTheme}>

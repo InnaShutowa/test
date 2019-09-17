@@ -77,8 +77,6 @@ class Registration extends Component {
                         headers: {"Access-Control-Allow-Origin": "http://localhost:9000"},
                         url: 'http://localhost:57785/User?apikey='+response.data.apikey
                     }).then(response=>{
-                        console.log(response);
-
                         if (response.data.status){
                             this.props.setUserData(response.data.data);
                             window.location.pathname = "/payments";
@@ -130,8 +128,6 @@ class Registration extends Component {
     }
 
     render() {
-        
-console.log(this.props.state);
 
         
         let colorEmail = this.props.state.userRegistration.emailValid ? "gray" : "red";

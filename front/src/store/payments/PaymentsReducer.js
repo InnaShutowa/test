@@ -32,11 +32,8 @@ const handlers  = {
                 PaymentNote: action.PaymentNote,
                 Sum: action.Sum 
             };
-            console.log(state);
 
             state.payments.push(payment);
-            console.log(state);
-
             return state;
         }
     },
@@ -48,7 +45,6 @@ const handlers  = {
     },
     "RESET_DATA":{
         handler(state, action){
-            //state = initialState;
             state = {
                 payments: [],
                 isReady: false,
@@ -57,7 +53,6 @@ const handlers  = {
                 selected: state.selected,
                 findValue: state.findValue
             };
-            //{state, payments: [], isReady: false};
             return state;
         }
     },
@@ -75,7 +70,6 @@ const handlers  = {
     },
     "CHANGE_SELECTED_VALUE":{
         handler(state, action){
-            console.log(action.value);
             state = {...state, selected: action.value};
             return state;
         }
