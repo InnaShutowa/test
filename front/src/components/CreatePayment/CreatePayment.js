@@ -1,18 +1,25 @@
 import React, {Component} from "react";
-import {Link} from "react-router-dom";
 import {connect} from "react-redux";
 import Button from '@material-ui/core/Button';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import axios from 'axios';
+import TextField from '@material-ui/core/TextField';
 
 import * as types from "../../store/createPayment/Constants/ActionNumberTypes";
 import styles from "./styles.css";
 import newTheme from "../../helpers/newTheme";
+import useStyles from "../../helpers/useStyles";
+
 import SetPaymentDataAction from "../../store/createPayment/Actions/SetPaymentDataAction";
 import SetValidatingResult from "../../store/createPayment/Actions/SetValidatingResult";
 import ResetDataPaymentAction from "../../store/createPayment/Actions/ResetDataPaymentAction";
 import SetUserDataAction from "../../store/user/Actions/SetUserDataAction";
 import validatePaymentCreate from "../../helpers/validatePaymentCreate";
+
+
+
+
+
 
 
 const mapStateToProps = function (state) {
@@ -85,6 +92,7 @@ class CreatePayment extends Component {
             });
         } else{
             this.props.setValidatingResult(obj.polesValid, obj.accountForNumberValid, obj.sumValid);
+            console.log(this.props.state);
         }
         
         event.preventDefault();
@@ -108,41 +116,48 @@ class CreatePayment extends Component {
 
     render(){
 
-        let colorPoles = this.props.state.createPayment.polesValid ? "gray" : "red";
-        let colorSum = this.props.state.createPayment.sumValid ? "gray" : "red";
-        let colorNumber = this.props.state.createPayment.accountForNumberValid ? "gray" : "red";
+          
+        let colorPoles = this.props.state.createPayment.polesValid ? "gainsboro" : "#F78181";
+        let colorSum = this.props.state.createPayment.sumValid ? "gainsboro" : "#F78181";
 
         return <div>
             <div className={styles.title}>Выполнить перевод</div>
             <div className={styles.form}>
                 <form onSubmit={a=>this.handleChange(a)}>
                     
-                    <input className={styles.input} 
+                <TextField required className={useStyles.textField}
+                        margin="normal"
+                        variant="outlined"
                         type="number" 
+                        style={{backgroundColor: colorPoles}}
                         placeholder="Введите номер счета" 
                         value = {this.props.state.createPayment.accountNumber}
-                        style = {{borderColor: colorNumber}}
                         onChange={a=>this.handlerAccountNumberChange(a)}/> <br/>
 
-                    <input className={styles.input} 
+                <TextField className={useStyles.textField}
+                        margin="normal"
+                        variant="outlined"
                         type="number" 
                         placeholder="Введите сумму" 
                         value = {this.props.state.createPayment.sum}
-                        style = {{borderColor: colorSum}}
+                        style = {{backgroundColor: colorSum}}
                         onChange={a=>this.handlerSumChange(a)}/><br/><br/>
 
-                    <input className={styles.input} 
+                <TextField className={useStyles.textField}
+                        margin="normal"
+                        variant="outlined"
                         type="text" 
                         placeholder="Введите название платежа" 
                         value = {this.props.state.createPayment.paymentName}
-                        style = {{borderColor: colorPoles}}
+                        style = {{backgroundColor: colorPoles}}
                         onChange={a=>this.handlerPaymentNameChange(a)}/><br/><br/>
 
-                    <input className={styles.input} 
+                <TextField className={useStyles.textField}
+                        variant="outlined"
                         type="text" 
                         placeholder="Введите коментарий к платежу" 
                         value = {this.props.state.createPayment.paymentNote}
-                        style = {{borderColor: "gray"}}
+                        style = {{backgroundColor: "gainsboro"}}
                         onChange={a=>this.handlerPaymentNoteChange(a)}/><br/><br/>
 
                     

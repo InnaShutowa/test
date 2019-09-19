@@ -4,6 +4,7 @@ import styles from "./styles.css"
 import Button from '@material-ui/core/Button';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import axios from 'axios';
+import TextField from '@material-ui/core/TextField';
 
 import SetApikeyAction from "../../store/userAuth/Actions/SetApikeyAction";
 import SetPoleAuthAction from "../../store/userAuth/Actions/SetPoleAuthAction";
@@ -13,6 +14,7 @@ import newTheme from "../../helpers/newTheme";
 import validateAuth from "../../helpers/validateAuth";
 import ResetDataAction from "../../store/userAuth/Actions/ResetDataAction";
 import SetUserDataAction from "../../store/user/Actions/SetUserDataAction";
+import useStyles from "../../helpers/useStyles";
 
 
   
@@ -109,25 +111,29 @@ class Authorization extends Component {
     render() {
 
 
-        let colorEmail = this.props.state.userAuth.emailValid ? "gray" : "red";
-        let colorPassword = this.props.state.userAuth.passwordValid ? "gray" : "red";
+        let colorEmail = this.props.state.userAuth.emailValid ? "gainsboro" : "#F78181";
+        let colorPassword = this.props.state.userAuth.passwordValid ? "gainsboro" : "#F78181";
 
         return <div className={styles.mainForm}>
             <div className={styles.title}>Авторизация</div>
             <form onSubmit={a=>this.handleChange(a)}>
                 
-                <input className={styles.input} 
+                <TextField required className={useStyles.textField}
+                    margin="normal"
+                    variant="outlined"                    
                     type="text" 
                     placeholder="Введите email" 
                     value = {this.props.state.userAuth.email}
-                    style = {{borderColor: colorEmail}}
+                    style = {{backgroundColor: colorEmail}}
                     onChange={a=>this.handlerEmailChange(a)}/> <br/>
 
-                <input className={styles.input} 
+                <TextField required className={useStyles.textField}
+                    margin="normal"
+                    variant="outlined"
                     type="password" 
                     placeholder="Введите пароль" 
                     value = {this.props.state.userAuth.password}
-                                style = {{borderColor: colorPassword}}
+                    style = {{backgroundColor: colorPassword}}
                     onChange={a=>this.handlePasswordChange(a)}/><br/><br/>
                 
                 <MuiThemeProvider theme={newTheme}>

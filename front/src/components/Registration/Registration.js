@@ -4,6 +4,7 @@ import styles from "./styles.css"
 import Button from '@material-ui/core/Button';
 import { MuiThemeProvider} from '@material-ui/core/styles';
 import axios from 'axios';
+import TextField from '@material-ui/core/TextField';
 
 import RegistrationAction from "../../store/userRegistration/Actions/RegistrationAction";
 import SetPoleRegAction from "../../store/userRegistration/Actions/SetPoleRegAction";
@@ -15,6 +16,7 @@ import validateRegistration from "../../helpers/validateRegistration";
 import SetResultsValidationAction from "../../store/userRegistration/Actions/SetResultsValidationAction";
 import ResetDataAction from "../../store/userRegistration/Actions/ResetDataAction";
 import SetUserDataAction from "../../store/user/Actions/SetUserDataAction";
+import useStyles from "../../helpers/useStyles";
 
 const mapStateToProps = function (state) {
     return {
@@ -89,8 +91,6 @@ class Registration extends Component {
                         alert("Непредвиденная ошибка!");
                     });
 
-
-                    //window.location.pathname = "/payments";
                 } else{
                     this.props.resetData();
                     alert("Непредвиденная ошибка!");
@@ -130,47 +130,57 @@ class Registration extends Component {
     render() {
 
         
-        let colorEmail = this.props.state.userRegistration.emailValid ? "gray" : "red";
-        let colorPassword = this.props.state.userRegistration.passwordValid ? "gray" : "red";
-        let colorPoles = this.props.state.userRegistration.polesValid ? "gray" : "red";
+        let colorEmail = this.props.state.userRegistration.emailValid ? "gainsboro" : "#F78181";
+        let colorPassword = this.props.state.userRegistration.passwordValid ? "gainsboro" : "#F78181";
+        let colorPoles = this.props.state.userRegistration.polesValid ? "gainsboro" : "#F78181";
 
         return <div className={styles.mainForm}>
             <div className={styles.title}>Регистрация</div>
             <form onSubmit={a=>this.handleChange(a)}>
 
-                <input className={styles.input} 
+                <TextField className={useStyles.textField}
+                        margin="normal"
+                        variant="outlined"  
                         type="text" 
                         placeholder="Имя" 
                         value = {this.props.state.userRegistration.firstName}
-                        style = {{borderColor: colorPoles}}
-                        onChange={a=>this.handlerFirstNameChange(a)}/> <br/>
+                        style = {{backgroundColor: colorPoles}}
+                        onChange={a=>this.handlerFirstNameChange(a)}/><br/>
 
-                <input className={styles.input} 
+                <TextField className={useStyles.textField}
+                        margin="normal"
+                        variant="outlined"  
                         type = "text" 
                         placeholder = "Фамилия" 
                         style = {{borderColor: colorPoles}}
                         value = {this.props.state.userRegistration.secondName}
-                        onChange = {a=>this.handlerSecondNameChange(a)}/> <br/>
+                        onChange = {a=>this.handlerSecondNameChange(a)}/><br/>
                     
-                <input className={styles.input} 
+                <TextField className={useStyles.textField}
+                        margin="normal"
+                        variant="outlined"  
                         type="text" 
                         placeholder="Еmail" 
                         value = {this.props.state.userRegistration.email}
-                        style = {{borderColor: colorEmail}}
+                        style = {{backgroundColor: colorEmail}}
                         onChange={a=>this.handlerEmailChange(a)}/> <br/><br/>
 
-                <input className = {styles.input} 
+                <TextField className={useStyles.textField}
+                        margin="normal"
+                        variant="outlined"  
                         type = "password" 
                         placeholder = "Введите пароль" 
                         value = {this.props.state.userRegistration.passwordFirst}
-                        style = {{borderColor: colorPassword}}
+                        style = {{backgroundColor: colorPassword}}
                         onChange = {a=>this.handlerPasswordFirstChange(a)}/><br/>
 
-                <input className = {styles.input} 
+                <TextField required className={useStyles.textField}
+                        margin="normal"
+                        variant="outlined"  
                         type = "password" 
                         placeholder = "Повторите пароль" 
                         value = {this.props.state.userRegistration.passwordSecond}
-                        style = {{borderColor: colorPassword}}
+                        style = {{backgroundColor: colorPassword}}
                         onChange = {a=>this.handlerPasswordSecondChange(a)}/><br/> <br/>
 
                 <MuiThemeProvider theme={newTheme}>
