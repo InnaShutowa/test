@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import {Link} from "react-router-dom";
 import {connect} from "react-redux";
 import storage from 'redux-persist/lib/storage';
+import { AppBar, Tabs, Tab } from '@material-ui/core';
 
 import style from "./styles.css";
 
@@ -11,8 +12,12 @@ const mapStateToProps = function (state) {
     };
 };
 
-
+let type = 0;
 class HeaderAuth extends Component {
+    handlerChange(event,newValue){
+        type = newValue;
+    }
+
     HandlerClick(){
         storage.removeItem('persist:userRoot');
         storage.removeItem('persist:paymentsRoot');
@@ -23,31 +28,17 @@ class HeaderAuth extends Component {
     }
 
     render() {
-        return <div>
-            <div className={style.inline}>
-                <p className={style.text}>TestApp</p>
-            </div>
-            
-            <div className={style.links}>
-                <div className={style.link}><Link to={"/"}>На главную</Link></div>
-                <div className={style.link}><Link to={"/payments"}>Платежи пользователя</Link></div>
-                <div className={style.link}><Link to={"/create"}>Создать платеж</Link></div>
-                <div className={style.link}>
-                    <div>
-                        <a href="/home">Ваш личный кабинет, {this.props.state.firstName}!</a>
-                    </div>
-                    <div className={style.budgetValue}>
-                        Бюджет
-                    </div>
-                    <div className={style.budgetValue}>
-                        {this.props.state.budget}
-                    </div>
-                    <div className={style.exit}>
-                        <a href="/" onClick={a=>this.HandlerClick()}>Выйти</a>
-                    </div>
-                </div>
-            </div>
-        </div>
+        return <div className={style.headerr}>
+        <AppBar title="TestApp">
+            <Tabs value={type} onChange={(event, newValue)=>this.handlerChange(event, newValue)}>
+                <Tab label="На главную" to='/' component={Link} ></Tab>
+                <Tab label="Платежи пользователя" to='/payments' component={Link} ></Tab>
+                <Tab label="Создать платеж" to='/create' component={Link}></Tab>
+                <Tab label="Личный кабинет" to='/home' component={Link}></Tab>
+                <Tab label="Выйти" to='/' onChange={a=>this.HandlerClick()} component={Link}></Tab>
+            </Tabs>
+        </AppBar>
+    </div>
     }
 }
 

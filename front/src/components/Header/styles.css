@@ -1,3 +1,8 @@
+.headerr{
+    padding-bottom: 10%;
+}
+
+
 @media screen and (max-width: 800px) {
     .links{
         width: 100%;

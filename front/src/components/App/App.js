@@ -44,6 +44,7 @@ let auth = <Route exact path={"/authorize"} component={Authorization}/>;
 var stor =  localStorage.getItem('persist:userRoot');
 const decoded = JSON.parse(stor);
 
+
 if (decoded!=undefined && decoded.isAuth != undefined && decoded.isAuth=="true"){
     head = <Route exact path={""} component={HeaderAuth}/>;
     payments =  <Route exact path={"/payments"} component={Payments}/>;
