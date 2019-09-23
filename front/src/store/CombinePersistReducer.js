@@ -2,12 +2,13 @@ import {BrowserRouter, Route} from "react-router-dom";
 import {persistStore, persistReducer, persistCombineReducers} from 'redux-persist'
 import storage from 'redux-persist/lib/storage';
 
-import UserReducer from ".//user/UserReducer";
+import UserReducer from "./user/UserReducer";
 import UserAuthReducer from "./userAuth/UserAuthReducer"
 import UserRegistrationReducer from "./UserRegistration/UserRegistrationReducer"
 import PaymentsReducer from "./payments/PaymentsReducer"
 import CreatePaymentReducer from "./createPayment/CreatePaymentReducer";
 import PaymentReducer from "./payment/PaymentReducer";
+import HeaderReducer from "./header/HeaderReducer";
 
 const persistUserConfig = {
     key: 'userRoot',
@@ -37,6 +38,10 @@ const persistPaymentConfig = {
     key: 'payment',
     storage,
 };
+const persistHeaderConfig = {
+    key: 'header',
+    storage,
+};
 
 
 const persistedUserReducer = persistReducer(persistUserConfig, UserReducer);
@@ -45,6 +50,7 @@ const persistedRegReducer = persistReducer(persistRegConfig, UserRegistrationRed
 const persistedPaymentsReducer = persistReducer(persistPaymentsConfig, PaymentsReducer);
 const persistedPaymentCreateReducer = persistReducer(persistPaymentCreateConfig, CreatePaymentReducer);
 const persistedPaymentReducer = persistReducer(persistPaymentConfig, PaymentReducer);
+const persistedHeaderReducer = persistReducer(persistHeaderConfig, HeaderReducer);
 
 const reducers = {
     UserAuthReducer: persistedAuthReducer,
@@ -52,7 +58,8 @@ const reducers = {
     PaymentsReducer: persistedPaymentsReducer,
     UserReducer: persistedUserReducer,
     CreatePaymentReducer: persistedPaymentCreateReducer,
-    PaymentReducer: persistedPaymentReducer
+    PaymentReducer: persistedPaymentReducer,
+    HeaderReducer: persistedHeaderReducer
 }
 
 const CombinePersistReducer = persistCombineReducers(persistConfig, reducers);

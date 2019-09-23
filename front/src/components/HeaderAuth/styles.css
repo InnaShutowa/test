@@ -1,7 +1,14 @@
 .exit{
     text-align: center;
 }
-
+.headerr{
+    padding-bottom: 10%;
+    display: inline-block;
+    width: 80%;
+}
+.elem{
+    float: left;
+}
 @media screen and (max-width: 630px){
     .links{
         width: 100%;

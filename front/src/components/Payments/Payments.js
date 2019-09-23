@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import {Link} from "react-router-dom";
 import {connect} from "react-redux";
 import axios from 'axios';
+import MaterialTable from "material-table";
 
 import styles from "./styles.css";
 import AddPaymentInfoAction from "../../store/payments/Actions/AddPaymentInfoAction";
@@ -145,12 +146,50 @@ class Payments extends Component {
         if (!this.props.state.payments.isReady) {
             return <div>Loading...</div>;
         } else {
-            return <div className={styles.padding}>
-            <div className={styles.title}>Список платежей</div>
+            let data = [];
 
+            this.props.state.payments.payments.map((element, i)=>{
+                let href = "/payment?id="+element.PaymentId;
+                let output = "-";
+                    if (element.Output){
+                        output = "+";
+                    }
+                data.push({name: element.PaymentName,
+                 id: element.PaymentId,
+                 sum: element.Sum,
+                 output: output, 
+                 date: element.PaymentDate, 
+                 accountNumber: element.ToAccountNumber,
+                 accountNumberFor: element.ForAccountNumber});
+            })
 
+            let table = <MaterialTable
+            title="Платежи"
+            columns={[
+              {
+                title: 'Название платежа', field: 'name',
+                cellStyle: {
+                  backgroundColor: '#039be5',
+                  color: '#FFF'
+                },
+                headerStyle: {
+                  backgroundColor: '#039be5',
+                }
+              },
+              { title: 'Id платежа', field: 'id', type:'numeric' },
+              { title: 'Сумма', field: 'sum', type: 'numeric' },
+              { title: 'Исходящий?', field: 'output' },
+              { title: 'Дата платежа', field: 'date', type: 'numeric' },
+              { title: 'Номер счета отправителя', field: 'accountNumber'},
+              { title: 'Номер счета получателя', field: 'accountNumberFor' },
+              
+            ]}
+            data={data}
+            options = {{
+                search: false
+            }}/>;
+            return <div>
             <div className={styles.find}>
-                
                 <input className={styles.elements}  
                         type="text" 
                         value={this.props.state.payments.findValue}
@@ -168,68 +207,75 @@ class Payments extends Component {
                 </div>
                 <input type="submit" onClick={a=>this.handlerFindByParams(a)} value="Поиск"/>
             </div>
-
-
             <div> 
                 <div>
-                    Только входящие
-                    <input type="checkbox" defaultChecked={this.props.state.payments.isOnlyInput} onChange={a=>this.handleChangeInput(a)} />
-                </div>
+                     Только входящие
+                     <input type="checkbox" defaultChecked={this.props.state.payments.isOnlyInput} onChange={a=>this.handleChangeInput(a)} />
+                 </div>
                 <div>
                     Только исходящие
                     <input type="checkbox" defaultChecked={this.props.state.payments.isOnlyOutput} onChange={a=>this.handleChangeOutput(a)} />
-                </div>
-               
+               </div>
             </div>
 
+            {table}
+        </div>            
+
+        //     return <div className={styles.padding}>
+        //     <div className={styles.title}>Список платежей</div>
+
+
+      
+
+
             
-            <table className={styles.table}>
-                <tbody>
-                <tr>
-                    <th>
-                        Id платежа
-                    </th>
-                    <th>
-                        Название платежа
-                    </th>
-                    <th>
-                        Сумма 
-                    </th>
-                    <th>
-                        Исходящий?
-                    </th>
-                    <th>
-                        Дата платежа
-                    </th>
-                    <th>
-                        Номер счета отправителя
-                    </th>
-                    <th>
-                        Номер счета получателя
-                    </th>
-                </tr>
-                    {
-                        this.props.state.payments.payments.map((element, i)=>{
-                            let href = "/payment?id="+element.PaymentId;
-                            let output = "-";
-                            if (element.Output){
-                                output = "+";
-                            }
-                            return <tr key={i}>
-                                <td className={styles.cells} key={i+"id"}><Link to={href}>{element.PaymentId}</Link></td>
-                                <td className={styles.cells} key={i+"name"}>{element.PaymentName}</td>
-                                <td className={styles.cells} key={i+"sum"}>{element.Sum}</td>
-                                <td className={styles.cells} key={i+"output"}>{output}</td>
-                                <td className={styles.cells} key={i+"date"}>{element.PaymentDate}</td>
-                                <td className={styles.cells} key={i+"to"}>{element.ToAccountNumber}</td>
-                                <td className={styles.cells} key={i+"for"}>{element.ForAccountNumber}</td>
-                            </tr>
-                        })
-                    }
+        //     <table className={styles.table}>
+        //         <tbody>
+        //         <tr>
+        //             <th>
+        //                 Id платежа
+        //             </th>
+        //             <th>
+        //                 Название платежа
+        //             </th>
+        //             <th>
+        //                 Сумма 
+        //             </th>
+        //             <th>
+        //                 Исходящий?
+        //             </th>
+        //             <th>
+        //                 Дата платежа
+        //             </th>
+        //             <th>
+        //                 Номер счета отправителя
+        //             </th>
+        //             <th>
+        //                 Номер счета получателя
+        //             </th>
+        //         </tr>
+        //             {
+        //                 this.props.state.payments.payments.map((element, i)=>{
+        //                     let href = "/payment?id="+element.PaymentId;
+        //                     let output = "-";
+        //                     if (element.Output){
+        //                         output = "+";
+        //                     }
+        //                     return <tr key={i}>
+        //                         <td className={styles.cells} key={i+"id"}><Link to={href}>{element.PaymentId}</Link></td>
+        //                         <td className={styles.cells} key={i+"name"}>{element.PaymentName}</td>
+        //                         <td className={styles.cells} key={i+"sum"}>{element.Sum}</td>
+        //                         <td className={styles.cells} key={i+"output"}>{output}</td>
+        //                         <td className={styles.cells} key={i+"date"}>{element.PaymentDate}</td>
+        //                         <td className={styles.cells} key={i+"to"}>{element.ToAccountNumber}</td>
+        //                         <td className={styles.cells} key={i+"for"}>{element.ForAccountNumber}</td>
+        //                     </tr>
+        //                 })
+        //             }
                     
-                </tbody>
-            </table>
-        </div>
+        //         </tbody>
+        //     </table>
+        // </div>
         }
     }
 }
